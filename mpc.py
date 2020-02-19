@@ -7,7 +7,6 @@ from cvxopt import matrix, solvers
 class MPC:
 
     def __init__(self, A, B, C, Q, R, RD, umin, umax, N):
-
         solvers.options['show_progress'] = False
 
         self.N = N # horizon length
@@ -21,7 +20,6 @@ class MPC:
 
     
     def dimension_fill(self, B, C):
-
         if B.ndim < 2:
             B = B[:, np.newaxis]
 
@@ -32,7 +30,6 @@ class MPC:
 
     
     def precompute(self, A, B, C, Q, R, RD, umin, umax):
-
         Qbar, Rbar, RbarD = self.build_bars(Q, R, RD, self.N)
 
         Sx = self.build_Sx(A, C, self.N)
@@ -53,7 +50,6 @@ class MPC:
     
 
     def build_bars(self, Q, R, RD, N):
-
         Qbar = np.kron(np.eye(N), Q) # weight penalty for states
         Rbar = np.kron(np.eye(N), R) # weight penalty for control effort
         RbarD = np.kron(np.eye(N), RD) # weight penalty for change in control effort
@@ -78,7 +74,6 @@ class MPC:
         # for i in range(2, N+1):
         #     next_element = C @ np.linalg.matrix_power(A, i)
         #     Sx1 = np.row_stack((Sx1, next_element))
-
         Sx = np.array([
             C @ np.linalg.matrix_power(A, i)
             for i in range(1, N+1)
@@ -93,7 +88,6 @@ class MPC:
         '''
             S is how the history of control inputs propogate to the future predicted outputs
         '''
-
         Su1 = np.array([
             C @ np.linalg.matrix_power(A, i) @ B
             for i in range(N)
@@ -108,7 +102,6 @@ class MPC:
         #     column_top = np.tile(zero_array, (i, 1))
         #     next_column = np.concatenate((column_top, Su1[:-i*self.num_outputs,:]))
         #     Su2 = np.column_stack((Su2, next_column))
-
         Su2 = np.array([
             np.concatenate((np.tile(np.zeros((self.num_outputs, self.num_inputs)),(i,1)), Su1[:-i*self.num_outputs,:])).T
             for i in range(1, N)
@@ -126,7 +119,6 @@ class MPC:
 
     
     def build_L(self, N):
-
         L = np.tril(np.tile(np.eye(self.num_inputs), (N, N)))
 
         assert L.shape == (self.num_inputs * N, self.num_inputs * N)
@@ -135,7 +127,6 @@ class MPC:
 
     
     def build_G(self, L, N):
-
         G = np.row_stack((L, np.negative(L)))
 
         assert G.shape == (2 * self.num_inputs * N, self.num_inputs * N)
@@ -144,7 +135,6 @@ class MPC:
 
     
     def build_W0(self, N, umin, umax):
-
         umin_arr = np.tile(np.negative(umin), (N, 1))
         umax_arr = np.tile(umax, (N, 1))
 
@@ -156,7 +146,6 @@ class MPC:
 
     
     def build_S(self, N):
-
         S = np.zeros((2 * self.num_inputs * N, self.num_states))
 
         assert S.shape == (2 * self.num_inputs * N, self.num_states)
@@ -165,7 +154,6 @@ class MPC:
 
 
     def build_P(self, Rbar, RbarD, Qbar, Su, L):
-
         P = 2 * (Su.T @ Qbar @ Su + L.T @ Rbar @ L + RbarD)
 
         assert P.shape == (self.num_inputs * self.N, self.num_inputs * self.N)
@@ -174,7 +162,6 @@ class MPC:
 
     
     def build_Fs(self, Rbar, Qbar, Su, Sx, L):
-
         Fu1 = 2 * (Rbar.T @ L.T)
         Fu2 = 2 * (Su[:, :self.num_inputs].T @ Qbar @ Su).T
         Fr = -2 * (Su.T @ Qbar.T)
@@ -189,7 +176,6 @@ class MPC:
 
 
     def calculate_q(self, X, U, traj_horizon):
-
         q = self.Fx @ X \
             + self.Fu2 @ U \
             + self.Fu1 @ np.tile(U, (self.N, 1)) \
@@ -201,7 +187,6 @@ class MPC:
 
 
     def calculate_W(self, U):
-
         U_neg = np.tile(np.negative(U), (self.N, 1))
         U_pos = np.tile(U, (self.N, 1))
         lastU = np.row_stack((U_neg, U_pos))
@@ -214,14 +199,12 @@ class MPC:
 
 
     def calculate_h(self, W, X):
-
         h = W + self.S @ X
 
         return h
 
     
     def get_control_input(self, X, U, traj):
-
         U, traj = self.fix_dimensions(U, traj)
 
         traj_horizon = self.get_trajectory_horizon(traj)
@@ -271,7 +254,6 @@ class MPC:
     
 
     def stack_trajectories(self, traj):
-
         traj = traj.T.reshape(-1,1)
         
         return traj

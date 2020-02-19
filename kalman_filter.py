@@ -5,15 +5,13 @@ from numpy.linalg import inv
 class KalmanFilter:
 
     def __init__(self):
-
         self.initialize_matrices()
-
+        
 
     def initialize_matrices(self):
         '''
             current dimension correspond to filtering a 4 state feedback system
         '''
-
         self.Xpred = np.zeros((4,1))
 
         self.P = np.diag([1, 1, 1, 1])

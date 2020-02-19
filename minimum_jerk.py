@@ -22,7 +22,6 @@ class MinimumJerk:
 
 
     def calculate_coefficients(self, start, end):
-
         t = self.move_time
         conditions = np.concatenate((start,end))
         solution_array = np.array([
@@ -53,7 +52,6 @@ class MinimumJerk:
 
 
     def generate_trajectory(self):
-
         coeff_array = np.array([
             self.calculate_coefficients(self.start_states[d], self.final_states[d])
             for d in range(self.dimensions)

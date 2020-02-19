@@ -6,7 +6,6 @@ from minimum_jerk import MinimumJerk
 class Plotter:
 
     def __init__(self, nrows, ncols, figsize, title=None):
-
         plt.rcParams['savefig.facecolor'] = 'xkcd:black'
         self.nrows = nrows
         self.ncols = ncols
@@ -14,7 +13,6 @@ class Plotter:
     
 
     def prepare_fig(self, figsize, title):
-
         self.fig, self.ax = plt.subplots(nrows=self.nrows, ncols=self.ncols, figsize=figsize)
         self.fig.patch.set_facecolor('xkcd:black')
 
@@ -34,7 +32,6 @@ class Plotter:
 
     
     def plot(self, x, y, row, col, title, xlabel, ylabel):
-
         self.ax[row, col].plot(x, y)
         self.ax[row, col].set_title(title, color='xkcd:white')
         self.ax[row, col].set_xlabel(xlabel, color='xkcd:white')

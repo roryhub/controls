@@ -43,7 +43,6 @@ class Simulator:
 
     
     def simulate(self):
-
         U, X = self.establish_starting_state()
 
         for i in range(self.ref_traj.shape[1]):
@@ -149,7 +148,6 @@ class Simulator:
 
 
 def main(model_type=0):
-
     if model_type == 0: # SISO
         A = np.array([
             [1.0, 1.0],
@@ -198,6 +196,5 @@ def main(model_type=0):
 
 
 if __name__ == '__main__':
-
     mtype = 1
     main(mtype)
