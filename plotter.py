@@ -61,10 +61,10 @@ if __name__ == '__main__':
 
     mj = MinimumJerk(start_states, final_states, move_time, frequency)
 
-    positions = mj.positions
-    velocities = mj.velocities
-    accelerations = mj.accelerations
-    jerks = mj.jerks
+    positions = mj.get_positions()
+    velocities = mj.get_velocities()
+    accelerations = mj.get_accelerations()
+    jerks = mj.get_jerks()
 
     time = np.linspace(0, move_time, mj.N)
 

@@ -64,8 +64,19 @@ class MinimumJerk:
             ]
             for d in range(self.dimensions)
         ])
-        
-        self.positions = self.trajectory[:, :, 0]
-        self.velocities = self.trajectory[:, :, 1]
-        self.accelerations = self.trajectory[:, :, 2]
-        self.jerks = self.trajectory[:, :, 3]
+    
+
+    def get_positions(self):
+        return self.trajectory[:, :, 0]
+
+    
+    def get_velocities(self):
+        return self.trajectory[:, :, 1]
+
+    
+    def get_accelerations(self):
+        return self.trajectory[:, :, 2]
+    
+
+    def get_jerks(self):
+        return self.trajectory[:, :, 3]
